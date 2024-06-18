@@ -2,10 +2,35 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
+const Joi = require('joi');
+const redisClient = require('./cache/redis');
+const session = require('express-session');
+const RedisStore = require('connect-redis').default;
+require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+
+const redisSessionClient = redisClient.duplicate();
+
+// Configure the session middleware
+app.use(session({
+    store: new RedisStore({ client: redisSessionClient, ttl: 86400 }), // Sessions expire in 24 hours
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }
+}));
+
+redisClient.connect();
+
+
+redisSessionClient.connect().then(() => {
+    console.log('Redis session client connected');
+}).catch(err => {
+    console.error('Redis session client error', err);
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -68,7 +93,22 @@ const handleUserInput = (userId, message) => {
 
     message = message.trim();
 
-    switch (userStates[userId]) {
+    // Define the schema based on the current state
+    const schemas = {
+        viewingMenu: Joi.string().valid('1', '99', '98', '97', '0').required(),
+        selectingItem: Joi.string().regex(/^\d+$/).required()
+    };
+
+    // Validate input based on the user state
+    const state = userStates[userId];
+    const schema = schemas[state] || Joi.string().required();
+    const { error } = schema.validate(message);
+
+    if (error) {
+        return 'Invalid input. Please enter a valid option.';
+    }
+
+    switch (state) {
         case 'viewingMenu':
             if (message === '1') {
                 userStates[userId] = 'selectingItem';
