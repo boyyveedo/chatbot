@@ -1,0 +1,186 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Define a breakpoint for smaller screens */
+@media screen and (max-width: 600px) {
+    body {
+        flex-direction: column;
+        /* Change flex direction to stack items vertically */
+        height: auto;
+        /* Remove fixed height */
+    }
+}
+
+/* Add a separate style for menu items */
+.menu-item {
+    padding: 5px 0;
+    margin: 5px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-item:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+#chat-container {
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#chat-header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#chat-header span:first-child {
+    margin-left: 10px;
+}
+
+#online-status {
+    display: flex;
+    align-items: center;
+    font-size: 2px;
+    margin-right: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.online-dot {
+    height: 10px;
+    width: 10px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+#messages {
+    list-style-type: none;
+    padding: 20px;
+    margin: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#messages li {
+    padding: 10px;
+    margin-bottom: 10px;
+    max-width: 75%;
+    display: inline-block;
+    clear: both;
+    position: relative;
+    border-radius: 15px;
+}
+
+/* Add CSS for the menu list */
+#messages ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#messages ul li {
+    margin: 5px 0;
+}
+
+/* Add these styles to your existing CSS */
+.user-message {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    align-self: flex-end;
+    border-radius: 15px 15px 15px 0;
+    border: 1px solid #c3e6cb;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.bot-message {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: white;
+    align-self: flex-start;
+    border-radius: 15px 15px 0 15px;
+    border: 1px solid #ff6f61;
+    padding: 10px 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#form {
+    display: flex;
+    border-top: 1px solid #ccc;
+}
+
+#input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    outline: none;
+    font-size: 16px;
+}
+
+button {
+    background: #007bff;
+    border: none;
+    padding: 0 20px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+#chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    /* Blue color */
+    color: white;
+    /* Text color */
+    border: none;
+    border-radius: 50%;
+    /* Make it round */
+    width: 50px;
+    /* Set width */
+    height: 50px;
+    /* Set height */
+    font-size: 24px;
+    /* Icon size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 999;
+    /* Ensure it's on top of other content */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    /* Add shadow */
+}

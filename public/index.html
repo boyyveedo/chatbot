@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+
+<body>
+    <div id="chat-toggle" class="chat-toggle-btn">
+        <i class="fas fa-comment"></i> <!-- Chatbot icon -->
+    </div>
+    <div id="chat-container" style="display: none;"> <!-- Initially hide the chatbot container -->
+        <div id="chat-header">
+            <span class="header-text">Hi there! 👋</span>
+            <span class="online-status">
+                <span class="online-dot"></span> We are online
+            </span>
+        </div>
+        <ul id="messages"></ul>
+        <form id="form" action="">
+            <input id="input" autocomplete="off" placeholder="Type your message..." /><button>Send</button>
+        </form>
+    </div>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+        const chatToggle = document.getElementById('chat-toggle');
+        const chatContainer = document.getElementById('chat-container');
+
+        // Function to toggle chatbot container
+        function toggleChatbot() {
+            chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Event listener for chatbot toggle button
+        chatToggle.addEventListener('click', toggleChatbot);
+
+        // Function to append messages
+        function appendMessage(message, className) {
+            const item = document.createElement('li');
+            // Add bot icon to bot messages
+            if (className === 'bot-message') {
+                item.innerHTML = `<div class="message-content"><i class="fas fa-robot"></i> ${message}</div>`;
+            } else {
+                item.innerHTML = `<div class="message-content">${message}</div>`;
+            }
+            item.className = className;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat message', input.value);
+                appendMessage(input.value, 'user-message'); // Add user message
+                input.value = '';
+            }
+        });
+
+        socket.on('chat message', (msg) => {
+            appendMessage(msg, 'bot-message'); // Add bot message
+        });
+
+        // Play notification sound on connection
+        socket.on('connect', () => {
+            const notificationSound = new Audio('/notification.mp3');
+            notificationSound.play().catch(error => {
+                console.log("Audio playback failed: ", error);
+            });
+            socket.emit('chat message', 'connected');
+        });
+    </script>
+</body>
+
+</html>
