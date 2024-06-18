@@ -17,14 +17,17 @@ const redisSessionClient = redisClient.duplicate();
 // Configure the session middleware
 app.use(session({
     store: new RedisStore({ client: redisSessionClient, ttl: 86400 }), // Sessions expire in 24 hours
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET, //
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: { secure: false } // Set to true if using https
 }));
 
-redisClient.connect();
-
+redisClient.connect().then(() => {
+    console.log('Redis client connected');
+}).catch(err => {
+    console.error('Redis client error', err);
+});
 
 redisSessionClient.connect().then(() => {
     console.log('Redis session client connected');
